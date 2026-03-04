@@ -1,0 +1,223 @@
+# Install the dplyr package (requires internet connection)
+install.packages("dplyr")
+
+# Load necessary packages for data manipulation and reading files
+library(dplyr)
+library(readr)
+
+# Load student data from a local CSV file
+student_data <- read.csv("student_data.csv")
+
+# Filter the dataset to include only students who scored less than 40 on the final exam
+Student_fail <- student_data %>% filter(final_exam_mark < 40)
+
+# Open the filtered failing students dataset in RStudio's data viewer
+View(Student_fail)
+
+# Preview the first 6 rows of the original dataset
+head(student_data)
+
+# Preview the last 6 rows of the original dataset
+tail(student_data)
+
+# Display summary statistics (min, max, mean, median, etc.) for all columns
+summary(student_data)
+
+# (Duplicate command) Filter failing students again
+Student_fail <- student_data %>% filter(final_exam_mark < 40)
+
+# (Duplicate command via base R) Another way to filter failing students using row indexing
+Student_fail <- Student_fail <- student_data[student_data$final_exam_mark < 40, ]
+
+# Filter students scoring over 40 and sort them in ascending order by final exam mark
+mydata <- student_data %>% 
+  filter(final_exam_mark > 40) %>% 
+  arrange(final_exam_mark)
+
+# Open the original dataset in the data viewer
+View(student_data)
+
+# Open the newly filtered/sorted dataset in the data viewer
+View(mydata)
+
+# Filter students scoring over 40 and sort them in descending order by final exam mark
+mydata1 <- student_data %>% filter(final_exam_mark > 40) %>%
+  arrange(desc(final_exam_mark))
+
+# View the dataset sorted in descending order
+View(mydata1)
+
+# Select only specific columns (ID and marks) and drop the rest
+mydata <- student_data %>% select(student_id, coursework_mark, final_exam_mark)
+
+# View the subset containing only those three columns
+View(mydata)
+
+# See a compact summary of the structure of 'mydata'
+glimpse(mydata)
+
+# Get summary statistics for the specific selected columns
+summary(mydata)
+
+# Create a new column called 'Total_Mark' based on a mathematical formula
+mydata = student_data %>% mutate(Total_Mark = (coursework_mark + final_exam_mark/200*100))
+
+# Select specific columns using base R syntax (instead of dplyr's select)
+mydata2 <- student_data[, c("student_id", "coursework_mark", "final_exam_mark")]
+
+# Load R's built-in "iris" dataset to practice with
+data <- iris
+
+# View the first 6 rows of the iris dataset
+head(data)
+
+# Check the structure (data types, dimensions) of the iris dataset
+str(data)
+
+# Find the minimum Sepal Length
+min(data$Sepal.Length)
+
+# Find the maximum Sepal Length
+max(data$Sepal.Length)
+
+# Find the range (both min and max) of Sepal Length
+range(data$Sepal.Length)
+
+# Display summary statistics for the entire iris dataset
+summary(data)
+
+# Create a custom numerical vector 'A'
+A <- c(170.2, 181.5, 188.9, 163.9, 166.4, 163.7, 160.4, 175.8, 181.5)
+
+# Calculate percentiles (0%, 25%, 50%, 75%, 100%) for vector 'A'
+quantile(A)
+
+# Sort vector 'A' from smallest to largest
+sort(A)
+
+# Calculate the Interquartile Range (Q3 - Q1) for vector 'A'
+IQR(A)
+
+# Create a basic histogram of Sepal Length with custom colors and labels
+hist(iris$Sepal.Length, 
+     main = "Histogram of Sepal Length (Iris Dataset)", 
+     xlab = "Sepal Length", 
+     col = "skyblue", 
+     border = "white")
+
+# Create a boxplot grouped by Species using light pastel colors
+boxplot(Sepal.Length ~ Species, 
+        data = iris, 
+        main = "Boxplot of Sepal Length by Species", 
+        xlab = "Species", 
+        ylab = "Sepal Length (cm)", 
+        col = c("lightgreen", "salmon", "lightblue"))
+
+# Create another boxplot grouped by Species using primary colors
+boxplot(Sepal.Length ~ Species, 
+        data = iris, 
+        main = "Boxplot of Sepal Length by Species", 
+        xlab = "Species", 
+        ylab = "Sepal Length (cm)", 
+        col = c("blue", "red","yellow"))
+
+# Create a base R scatter plot of Sepal Length vs Petal Length, colored by species
+plot(iris$Sepal.Length, iris$Petal.Length, 
+     col = iris$Species,           # Color by species
+     pch = 19,                     # Use solid circles
+     main = "Sepal Length vs Petal Length",
+     xlab = "Sepal Length (cm)", 
+     ylab = "Petal Length (cm)")
+
+# Add a legend to the bottom right of the scatter plot
+legend("bottomright", legend = levels(iris$Species), col = 1:3, pch = 19)
+
+# Load ggplot2 for more advanced data visualization
+library(ggplot2)
+
+# Create an advanced scatter plot using ggplot2
+ggplot(iris, aes(x = Sepal.Length, y = Petal.Length, color = Species)) +
+  geom_point(size = 3, alpha = 0.7) +
+  labs(title = "Scatter Plot: Sepal Length vs Petal Length",
+       x = "Sepal Length (cm)",
+       y = "Petal Length (cm)") +
+  theme_minimal()
+
+# Load a 'players' CSV file
+dfplayers <- read.csv("players.csv")
+
+# Find the median age of the players, ignoring any missing values (NA)
+median_age <- median(dfplayers$Age, na.rm = TRUE)
+
+# Replace any anomalous ages (under 18 or over 38) with the median age
+dfplayers$Age[dfplayers$Age < 18 | dfplayers$Age > 38] <- median_age
+
+# View the cleaned players dataset
+View(dfplayers)
+
+# Create a new dataset consisting of a string of numbers to practice outlier handling
+data <- c(30,24,26,28,29,28,27,26,32,34,13,15,14,31,29,28,24,25,30,34,35,27,30,34,44,48)
+
+# Create a boxplot to visually spot outliers
+boxplot(data, main = "Boxplot")
+
+# Sort the data from lowest to highest
+sort(data)
+
+# Print summary statistics to see quartiles and mean
+summary(data)
+
+# Calculate the Interquartile Range (IQR) to help define outliers
+iqr <- IQR(data)
+
+# Find the first quartile (25th percentile)
+first_q <- quantile(data, 0.25)
+
+# Find the third quartile (75th percentile)
+third_q <- quantile(data, 0.75)
+
+# Define the lower threshold (lower edge) for outliers using the 1.5 * IQR rule
+le <- first_q - 1.5 * iqr
+
+# Define the upper threshold (upper edge) for outliers using the 1.5 * IQR rule
+ue <- third_q + 1.5 * iqr
+
+# View the calculated lower edge value
+View(le)
+
+# Create a copy of the data to begin manipulating outliers
+data_new <- data
+
+# Method 1: Remove the outliers entirely by keeping only data within the fences
+data_new <- data_new[!data_new < le]
+data_new <- data_new[!data_new > ue]
+
+# Print the data to see the results after removal
+data_new
+
+# Reset 'data_new' back to the original set containing outliers
+data_new <- data
+
+# Calculate a rounded average of the data for imputation
+avg <- round(mean(data_new)) # for the purpose of example we round up value
+
+# Method 2: Replace values below the lower edge and above the upper edge with the mean
+data_new[data_new < le] <- avg
+data_new[data_new > ue] <- avg
+
+# Print the data to see the results after mean replacement
+data_new
+
+# Reset 'data_new' back to the original set again
+data_new <- data
+
+# Method 3: 'Winsorizing' (Cap the outliers at the upper and lower fence values)
+data_new[data_new < le] <- le
+data_new[data_new > ue] <- ue
+
+# Print the data to see the results after Winsorizing
+data_new
+
+# Plot a new boxplot to verify the outliers have been successfully handled
+boxplot(data_new, main = "Boxplot")
+
